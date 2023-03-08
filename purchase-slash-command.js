@@ -1,6 +1,8 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-
+const { sendDM } = require("./modules/slack");
+const config = require("./config");
+const { ceo } = require("./config");
 const app = express();
 const port = 3000;
 
@@ -10,11 +12,8 @@ app.use(bodyParser.json());
 
 app.post("/purchase", async (req, res) => {
   console.log(req.body);
-  res.send('Ok')
-});
-
-app.get("/", (req, res) => {
-  res.send("Hello World!");
+  res.json({ text: `Thanks for your purchase request of ${req.body.text}` });
+  sendDM(config.ceo, `hey douchebag, <@${req.body.user_id}> placed a purchase request of ${req.body.text}. Yay or Neigh?`);
 });
 
 app.listen(port, () => {
